@@ -2,7 +2,7 @@
 #define MPAGSCIPHER_PLAYFAIRCIPHER_HPP
 
 #include "CipherMode.hpp"
-
+#include <map>
 #include <string>
 
 /**
@@ -43,6 +43,10 @@ class PlayfairCipher {
   private:
     /// The cipher key
     std::string key_{""};
+    using Char2IntMap = std::map<char, std::pair<int,int>>;
+    using Int2CharMap = std::map<std::pair<int,int>, char>;
+    Char2IntMap letterToCoordsMap;
+    Int2CharMap coordsToLetterMap;
 };
 
 #endif

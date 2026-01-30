@@ -25,11 +25,35 @@ void PlayfairCipher::setKey(const std::string& key)
     std::transform(std::begin(key_), std::end(key_), std::begin(key_),
                    ::toupper);
 
-    // Remove non-alphabet characters
+    auto iter = std::remove_if(std::begin(key_), std::end(key_),
+                               [](const char c) { return !std::isalpha(c); });
 
-    // Change J -> I
+    key_.erase(iter, std::end(key_));
 
-    // Remove duplicated letters
+    std::transform(std::begin(key_), std::end(key_), std::begin(key_),
+                   [](const char c) { return (c == 'J') ? 'I' : c; });
+
+    std::string encountered{};
+    auto iter2 = std::remove_if(std::begin(key_), std::end(key_),
+                                [&encountered](const char c) {
+                                    if (encountered.find(c) == std::string::npos) {
+                                        encountered += c;
+                                        return false;
+                                    } else {
+                                        return true;
+                                    }
+                                });
+    key_.erase(iter2, std::end(key_));
+
+
+    for(const i{0}; key_.size(); i++) {
+        int row{i/5};
+        int col{i%5};
+        std::pair<int,int> coords(row,col);
+        letterToCoordsMap[key_[i]] = coords;
+        coordsToLetterMap[coords] = key_[i];
+    }
+
 
     // Store the coordinates of each letter
 }
@@ -40,7 +64,7 @@ std::string PlayfairCipher::applyCipher(const std::string& inputText,
     // Create the output string, initially a copy of the input text
     std::string outputText{inputText};
 
-    // Change J -> I
+    // reorder string and return iter to start of chars to erase
 
     // Find repeated characters and add an X (or a Q for repeated X's)
 
