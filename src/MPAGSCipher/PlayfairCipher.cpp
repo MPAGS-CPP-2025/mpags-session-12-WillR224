@@ -25,6 +25,26 @@ void PlayfairCipher::setKey(const std::string& key)
     std::transform(std::begin(key_), std::end(key_), std::begin(key_),
                    ::toupper);
 
+    auto iter = std::remove_if(std::begin(key_), std::end(key_),
+                               [](const char c) { return !std::isalpha(c); });
+
+    key_.erase(iter, std::end(key_));
+
+    std::transform(std::begin(key_), std::end(key_), std::begin(key_),
+                   [](const char c) { return (c == 'J') ? 'I' : c; });
+
+    std::string encountered{};
+    auto iter2 = std::remove_if(std::begin(key_), std::end(key_),
+                                [&encountered](const char c) {
+                                    if (encountered.find(c) == std::string::npos) {
+                                        encountered += c;
+                                        return false;
+                                    } else {
+                                        return true;
+                                    }
+                                });
+    key_.erase(iter2, std::end(key_));
+
     // Remove non-alphabet characters
 
     // Change J -> I
@@ -40,7 +60,7 @@ std::string PlayfairCipher::applyCipher(const std::string& inputText,
     // Create the output string, initially a copy of the input text
     std::string outputText{inputText};
 
-    // Change J -> I
+    // reorder string and return iter to start of chars to erase
 
     // Find repeated characters and add an X (or a Q for repeated X's)
 
