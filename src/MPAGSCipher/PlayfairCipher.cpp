@@ -45,11 +45,15 @@ void PlayfairCipher::setKey(const std::string& key)
                                 });
     key_.erase(iter2, std::end(key_));
 
-    // Remove non-alphabet characters
 
-    // Change J -> I
+    for(const i{0}; key_.size(); i++) {
+        int row{i/5};
+        int col{i%5};
+        std::pair<int,int> coords(row,col);
+        letterToCoordsMap[key_[i]] = coords;
+        coordsToLetterMap[coords] = key_[i];
+    }
 
-    // Remove duplicated letters
 
     // Store the coordinates of each letter
 }
